@@ -29,7 +29,7 @@ public class IntroActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume(); //다시 화면에 들어오면 예약 걸어줌
-        handler.postDelayed(r, 1500); //1.5초 뒤에 runnable 객체 r 실행
+        handler.postDelayed(r, 1000); //1초 뒤에 runnable 객체 r 실행
     }
 
     @Override
