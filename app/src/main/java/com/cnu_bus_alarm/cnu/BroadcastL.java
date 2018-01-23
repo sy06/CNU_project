@@ -26,7 +26,7 @@ public class BroadcastL extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.cnu_alarmicon)
                 .setTicker("CNU막차 알람")
                 .setWhen(System.currentTimeMillis())
-                .setNumber(10)
+                .setNumber(1)
                 .setContentTitle("막차 출발 예정알람")
                 .setContentText("마지막 버스가 10분 후 출발 예정입니다.")
                 .setDefaults(Notification.DEFAULT_ALL)

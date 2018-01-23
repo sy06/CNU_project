@@ -22,6 +22,7 @@ public class DevActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dev);
+
         editText = (EditText) findViewById(R.id.adminanswer);
         button = (Button) findViewById(R.id.buttonOk);
 

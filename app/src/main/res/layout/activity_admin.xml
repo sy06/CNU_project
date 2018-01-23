@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_admin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
+
 
     <TextView
         android:text="Latitude Show Here"
@@ -17,7 +20,16 @@
         android:id="@+id/textView2"
         android:textColor="#000000"
         android:textSize="25dp"
-        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Longitude Show Here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -30,7 +42,7 @@
         android:id="@+id/gps_button1" />
 
     <Button
-        android:text="Access GPS location in coordinates "
+        android:text="Access GPS location in coordinates     Socket Start "
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/gps_button1"
@@ -38,15 +50,4 @@
         android:layout_marginTop="23dp"
         android:id="@+id/gps_button2" />
 
-    <TextView
-        android:text="Longitude Show Here"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textColor="#000000"
-        android:textSize="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="96dp" />
-
-</RelativeLayout>
+</LinearLayout>

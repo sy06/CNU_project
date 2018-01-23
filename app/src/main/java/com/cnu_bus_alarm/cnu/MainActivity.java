@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         SharedPreferences sf = getSharedPreferences("storedList", MODE_PRIVATE);
         int size1 = sf.getInt("FirstStatus_size", 0);
         int size2 = sf.getInt("SecondStatus_size", 0);
@@ -131,22 +132,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = null;
         switch(v.getId()){
             case R.id.locationbtn :
-                Toast.makeText(this,"실시간 버스 위치 확인",Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, LocationActivity.class);
                 break;
 
             case R.id.routebtn :
-                Toast.makeText(this,"노선 정보",Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, RouteActivity.class);
                 break;
 
             case R.id.timebtn :
-                Toast.makeText(this,"운행 시간 확인",Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, TimeActivity.class);
                 break;
 
             case R.id.adminbtn :
-                Toast.makeText(this,"관리자 모드",Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, DevActivity.class);
                 break;
         }
@@ -168,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked){
                     if(isChecked){
-                        Toast.makeText(MainActivity.this, items[which],Toast.LENGTH_SHORT).show();
                         if(!list1.contains(items[which])) {
                             count=true;
                             list1.add(items[which]);
@@ -249,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked){
                         if(isChecked){
-                            Toast.makeText(MainActivity.this, items[which],Toast.LENGTH_SHORT).show();
                             if(!list2.contains(items[which])) {
                                 count=true;
                                 list2.add(items[which]);

@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -38,8 +39,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class LocationActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -58,11 +62,53 @@ public class LocationActivity extends AppCompatActivity
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
     Location mCurrentLocation;
+
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
     LocationRequest locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(UPDATE_INTERVAL_MS).setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+
+
+    //받아올 정보
+    String word[];
+    int count = 0;
+    double latitudeA = 36.366, longitudeA = 127.3439;
+    double latitudeB=36.368, latitudeC=36.368, latitudeD=36.3665;
+    double longitudeB=127.3445, longitudeC=127.3439, longitudeD=127.3445;
+    String nosun;
+
+    //소켓
+    DatagramSocket ds = null;
+
+    // 노선별로 토큰 구분 -> 노선별로 위도, 경도 값 받음
+    public void word_token(String inputLine) {
+        if (inputLine != null) {
+            StringTokenizer parser = new StringTokenizer(inputLine, "|");
+            while (parser.hasMoreTokens()) {
+                word[count] = parser.nextToken();
+                count++;
+            }
+        }
+        nosun = word[2];
+        if (nosun == "A") {
+            latitudeA = Double.parseDouble(word[0]);
+            longitudeA = Double.parseDouble(word[1]);
+            Log.e("A 정보","latitude : " + latitudeA + ", longigude : " + longitudeA + "nosun" + nosun);
+        } else if (nosun == "B") {
+            latitudeB = Double.parseDouble(word[0]);
+            longitudeB = Double.parseDouble(word[1]);
+            Log.e("B 정보","latitude : " + latitudeB + ", longigude : " + longitudeB + "nosun" + nosun);
+        } else if (nosun == "C") {
+            latitudeC = Double.parseDouble(word[0]);
+            longitudeC = Double.parseDouble(word[1]);
+            Log.e("C 정보","latitude : " + latitudeC + ", longigude : " + longitudeC + "nosun" + nosun);
+        } else if (nosun == "D") {
+            latitudeD = Double.parseDouble(word[0]);
+            longitudeD = Double.parseDouble(word[1]);
+            Log.e("D 정보","latitude : " + latitudeD + ", longigude : " + longitudeD + "nosun" + nosun);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +124,28 @@ public class LocationActivity extends AppCompatActivity
 
         MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.mapp);
         mapFragment.getMapAsync(this);
+        StrictMode.enableDefaults(); //소켓
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramSocket ds = new DatagramSocket(7000);
+                    Log.e("준비완료", "받을준비완료");
+
+                    while(true){
+                        byte[]b = new byte[1024];
+                        DatagramPacket dp = new DatagramPacket(b,b.length);
+                        ds.receive(dp);
+                        String str = new String(dp.getData(),0,dp.getLength());
+                        Log.e("메세지: ",str);
+                    }
+                }catch(Exception e){
+                    Log.d("error","Socket error");
+                }
+            }
+        }).start();
+
     }
 
     @Override
@@ -162,6 +230,35 @@ public class LocationActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location){
+
+        LatLng A_BUS = new LatLng(latitudeA, longitudeA);
+        MarkerOptions MarkerA = new MarkerOptions();
+        MarkerA.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launchera));
+        mGoogleMap.addMarker(MarkerA.position(A_BUS).title("A노선 버스"));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(A_BUS));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+        LatLng B_BUS = new LatLng(latitudeB, longitudeB);
+        MarkerOptions MarkerB = new MarkerOptions();
+        MarkerB.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcherb));
+        mGoogleMap.addMarker(MarkerB.position(B_BUS).title("B노선 버스"));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(B_BUS));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+        LatLng C_BUS = new LatLng(latitudeC, longitudeC);
+        MarkerOptions MarkerC = new MarkerOptions();
+        MarkerC.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcherc));
+        mGoogleMap.addMarker(MarkerC.position(C_BUS).title("C노선 버스"));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(C_BUS));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+        LatLng D_BUS = new LatLng(latitudeD, longitudeD);
+        MarkerOptions MarkerD = new MarkerOptions();
+        MarkerD.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcherd));
+        mGoogleMap.addMarker(MarkerD.position(D_BUS).title("D노선 버스"));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(D_BUS));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
         currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
         Log.d(TAG, "onLocationChanged : ");
         String markerTitle = getCurrentAddress(currentPosition);
@@ -204,6 +301,10 @@ public class LocationActivity extends AppCompatActivity
         if(mGoogleApiClient.isConnected()){
             Log.d(TAG, "onStop : mGoogleApiClient disconnect");
             mGoogleApiClient.disconnect();
+        }
+
+        if(ds!= null){
+            ds.close();
         }
         super.onStop();
     }
@@ -294,7 +395,8 @@ public class LocationActivity extends AppCompatActivity
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_mapicon));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcherman));
+
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
         if(mMoveMapByAPI){
