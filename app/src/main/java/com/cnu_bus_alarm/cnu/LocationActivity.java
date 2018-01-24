@@ -395,7 +395,7 @@ public class LocationActivity extends AppCompatActivity
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcherman));
+
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
