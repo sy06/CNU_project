@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         public void AllcancelAlarmSecond(Context context){
             Log.i("막차알람모두해제", "AllcancelAlarm()");
-            Intent intent = new Intent(context, BroadcastD.class);
+            Intent intent = new Intent(context, BroadcastL.class);
             int count = check2.length;
             if(count>=0) {
                 for (int i = 1; i <= count; i++) {
@@ -115,10 +115,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         public void CancelAlarm(Context context, int id){
+            Intent intent = null;
             if(alarmManager != null) {
                 Log.i(id+"해제", "CancelAlarm()");
                 alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context, BroadcastD.class);
+                if(id==1||id==2||id==3||id==4){
+                    intent = new Intent(context, BroadcastD.class);
+                }else{
+                    intent = new Intent(context, BroadcastL.class);
+                }
                 sender = PendingIntent.getBroadcast(context, id, intent, 0);
                 alarmManager.cancel(sender);
                 sender.cancel();
